@@ -1,0 +1,98 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot AI - Sign In
+    </title>
+    <meta name="description"
+        content="Elevate your pics, skip the shoot. With the power of AI, generate professional grade pictures from the confort of your couch.">
+
+    <meta name="theme-color" content="black">
+    <link rel="icon" href="assets/logo/icon.png">
+
+    <link rel="stylesheet" href="setup.css">
+    <script src="signin.js" defer></script>
+    <script src="transition.js" defer></script>
+    <script type="module" src="gradient-import.js" defer></script>
+</head>
+
+<body>
+    <div id="transition"></div>
+
+    <main>
+        <div id="content">
+            <div id="form">
+                <div id="nav">
+                    <div id="links">
+                        <a class="skip_fade" href="mailto:support@photoshootai.app">Need help?</a>
+                        <a href="./setup">Register</a>
+                    </div>
+                </div>
+
+                <div id="section_container">
+                    <div id="section_2" class="sections visible">
+                        <h3>Welcome back!</h3>
+                        <h1>Sign in</h1>
+
+                        <form>
+                            <a onclick="signIn('google')" class="social_signin" id="google">
+                                <img src="assets/icons/google.png" alt="Google">
+                                <p>Sign in with Google</p>
+                            </a>
+
+                            <a onclick="signIn('microsoft')" class="social_signin" id="microsoft">
+                                <img src="assets/icons/microsoft.png" alt="Microsoft">
+                                <p>Sign in with Microsoft</p>
+                            </a>
+
+                            <a onclick="signIn('facebook')" class="social_signin" id="facebook">
+                                <img src="assets/icons/facebook.png" alt="Facebook">
+                                <p>Sign in with Facebook</p>
+                            </a>
+
+                            <div id="separator">
+                                <hr>
+                                <p>or</p>
+                                <hr>
+                            </div>
+
+                            <input id="email" type="email" placeholder="Email" autocomplete="email">
+
+                            <div id="password_container">
+                                <input id="password" type="password" placeholder="Password" autocomplete="password">
+                                <img id="password_view" class="hidden" src="assets/icons/eye.png">
+                            </div>
+
+                            <p id="error">&nbsp;</p>
+                        </form>
+                    </div>
+
+                    <div id="section_2_alt" class="sections">
+                        <h3>Happens to the best of us!</h3>
+                        <h1>Forgot password</h1>
+
+                        <form>
+                            <input id="email_forgot" type="email" placeholder="Email" autocomplete="email">
+                            <p id="error">&nbsp;</p>
+                            <br>
+                            <button id="reset_password" type="button" style="width: 100%; max-width: 200px;"
+                                onclick="resetPassword()">Reset</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="navigation">
+                    <a id="forgot_password" onclick="switchMenu()">Forgot password?</a>
+                    <button id="signin" style="width: 100%; max-width: 200px; margin-left: auto;"
+                        onclick="signIn('local')">Sign in</button>
+                </div>
+            </div>
+        </div>
+        <canvas id="gradient" data-transition-in></canvas>
+    </main>
+
+</body>
+
+</html>

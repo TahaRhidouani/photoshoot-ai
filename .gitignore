@@ -1,0 +1,7 @@
+model-data
+.env
+node_modules
+uploads
+.well-known
+views/assets/images/.DS_Store
+.DS_Store

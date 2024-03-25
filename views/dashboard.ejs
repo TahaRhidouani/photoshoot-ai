@@ -1,0 +1,542 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot AI - Dashboard</title>
+    <meta name="description"
+        content="Elevate your pics, skip the shoot. With the power of AI, generate professional grade pictures from the confort of your couch.">
+
+    <meta name="theme-color" content="black">
+    <link rel="icon" href="assets/logo/icon.png">
+
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="dashboard.js" defer></script>
+    <script src="transition.js" defer></script>
+    <script type="module" src="gradient-import.js" defer></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+    <div id="transition"></div>
+
+    <nav>
+        <img src="assets/logo/logo (white).png" alt="Photoshoot AI" id="logo">
+
+        <div id="tabs_container" <%=ready ? "" : "style=opacity:0.2;pointer-events:none;" %> >
+            <div class="tabs">
+                <input type="radio" id="radio-1" name="tabs" data-section=1 checked />
+                <label class="tab" for="radio-1">Photoshoot</label>
+                <input type="radio" id="radio-2" name="tabs" data-section=2 />
+                <label class="tab" for="radio-2">History</label>
+                <input type="radio" id="radio-3" name="tabs" data-section=3 />
+                <label class="tab" for="radio-3">Top Up</label>
+                <span id="glider"></span>
+            </div>
+        </div>
+
+        <div id="user_info">
+            <div>
+                <p>
+                    <span class="credits">
+                        <%= credits %>
+                    </span> credits
+                </p>
+                <a href="./logout">Logout</a>
+            </div>
+
+            <% if (profilPicture){ %>
+                <img id="profil_picture" src="pictures/<%=profilPicture %>" />
+                <% } else{ %>
+                    <img id="profil_picture" src="assets/icons/default-profile.png" />
+                    <% } %>
+        </div>
+
+        <canvas id="gradient" data-transition-in></canvas>
+    </nav>
+
+    <main>
+        <% if (ready){ %>
+            <div id="sections">
+                <div class="section visible" id="section_1">
+                    <div class="content">
+                        <div class="card" id="shoot_1">
+                            <h3>Quick & Easy</h3>
+                            <h4 class="preview">Easily experience the magic of AI</h4>
+
+                            <span class="expand" onclick="toggleExpandCard(1)">
+                                <svg class="tile-icon-alt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path
+                                        d="M18.5,8.51h-7v-7A1.5,1.5,0,0,0,10,0h0A1.5,1.5,0,0,0,8.5,1.5v7h-7a1.5,1.5,0,0,0,0,3h7v7A1.5,1.5,0,0,0,10,20h0a1.5,1.5,0,0,0,1.5-1.5v-7h7a1.5,1.5,0,0,0,0-3Z">
+                                    </path>
+                                </svg>
+                            </span>
+
+                            <div class="card_content hide">
+
+                                <div class="settings">
+
+                                    <div>
+                                        <h4>Aspect ratio</h4>
+                                        <div class="multiselect_wrapper">
+                                            <label for="square_quick" class="multiselect">
+                                                <input type="radio" name="aspect_ratio_quick" id="square_quick"
+                                                    onchange="updateAspectRatioPreview();" checked />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/square.png" alt="Square" />
+                                                        <h5>Square</h5>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label for="portrait_quick" class="multiselect">
+                                                <input type="radio" name="aspect_ratio_quick" id="portrait_quick"
+                                                    onchange="updateAspectRatioPreview();" />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/portrait.png" alt="Portrait" />
+                                                        <h5>Portrait</h5>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label for="landscape_quick" class="multiselect">
+                                                <input type="radio" name="aspect_ratio_quick" id="landscape_quick"
+                                                    onchange="updateAspectRatioPreview();" />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/landscape.png" alt="Landscape" />
+                                                        <h5>Landscape</h>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div id="photo_content_settings">
+                                        <h4>Photo content</h4>
+                                        <a class="button_alt" id="location"
+                                            onclick="browseCategory('location', true)">Pick
+                                            location</a>
+                                        <a class="button_alt" id="season" onclick="browseCategory('season', true)">Pick
+                                            season</a>
+                                        <a class="button_alt" id="outfit" onclick="browseCategory('outfit', true)">Pick
+                                            outfit</a>
+                                        <a class="button_alt" id="shot" onclick="browseCategory('shot', true)">Pick
+                                            shot</a>
+                                        <a class="button_alt" id="time" onclick="browseCategory('time', true)">Pick
+                                            time</a>
+                                        <a class="button_alt" id="emotion"
+                                            onclick="browseCategory('emotion', true)">Pick emotion</a>
+                                        <div class="generation_info">
+                                            <img src="assets/icons/i.png" alt="&#9432;">
+                                            <p>Less specific photo content yields more accurate results</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="generate_wrapper">
+                                        <button onclick="generatePicture(1)">Generate</button>
+                                    </div>
+                                </div>
+
+                                <div class="photoshoots_container hide">
+                                    <div class="photoshoots_wrapper">
+                                        <div class="photoshoots image_container">
+                                            <img class="hide">
+                                            <div class="button_wrapper hide">
+                                                <div class="button close_button"></div><a
+                                                    class="button download_button"></a>
+                                                <div class="button heart_toggle"></div>
+                                            </div>
+
+                                            <section class="loader">
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="status"></h5>
+
+                                    <a id="generate_back" class="button_alt" style="max-width: 300px;"
+                                        onclick="disableSettings(false)">Go
+                                        back</a>
+                                </div>
+
+                                <div class="submenu hide">
+                                    <h4>Pick <span id="category"></span></h4>
+
+                                    <div class="submenu_gallery_wrapper">
+                                        <div class="submenu_gallery" id="category_gallery">
+
+                                        </div>
+                                    </div>
+
+                                    <a class="button_alt" style="max-width: 300px;"
+                                        onclick="browseCategory(null, false)">Go
+                                        back</a>
+                                </div>
+
+                            </div>
+                            <h4 id="credits"><span class="credits">
+                                    <%= credits %>
+                                </span> credits</h4>
+                        </div>
+
+                        <div class="card" id="shoot_2">
+                            <h3>Customize</h3>
+                            <h4 class="preview">Unleash your creativity with text prompts</h4>
+
+                            <span class="expand" onclick="toggleExpandCard(2)">
+                                <svg class="tile-icon-alt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path
+                                        d="M18.5,8.51h-7v-7A1.5,1.5,0,0,0,10,0h0A1.5,1.5,0,0,0,8.5,1.5v7h-7a1.5,1.5,0,0,0,0,3h7v7A1.5,1.5,0,0,0,10,20h0a1.5,1.5,0,0,0,1.5-1.5v-7h7a1.5,1.5,0,0,0,0-3Z">
+                                    </path>
+                                </svg>
+                            </span>
+
+                            <div class="card_content hide">
+
+                                <div class="settings">
+
+                                    <div>
+                                        <h4>Aspect ratio</h4>
+                                        <div class="multiselect_wrapper">
+                                            <label for="square_custom" class="multiselect">
+                                                <input type="radio" name="aspect_ratio_custom" id="square_custom"
+                                                    onchange="updateAspectRatioPreview();" checked />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/square.png" alt="Square" />
+                                                        <h5>Square</h5>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label for="portrait_custom" class="multiselect">
+                                                <input type="radio" name="aspect_ratio_custom" id="portrait_custom"
+                                                    onchange="updateAspectRatioPreview();" />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/portrait.png" alt="Portrait" />
+                                                        <h5>Portrait</h5>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label for="landscape_custom" class="multiselect">
+                                                <input type="radio" name="aspect_ratio_custom" id="landscape_custom"
+                                                    onchange="updateAspectRatioPreview();" />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/landscape.png" alt="Landscape" />
+                                                        <h5>Landscape</h>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4>Prompt</h4>
+                                        <textarea id="prompt" maxlength="500"
+                                            placeholder="Enter comma seperated keywords (e.g., 'forest, playing basketball, wearing sweater')"></textarea>
+                                    </div>
+
+                                    <div>
+                                        <h4>Negative prompt</h4>
+                                        <textarea id="negative_prompt" maxlength="500"
+                                            placeholder="Enter comma seperated keywords (e.g., 'earrings, sunglasses, beard')"></textarea>
+                                    </div>
+
+                                    <div class="generation_info">
+                                        <img src="assets/icons/i.png" alt="&#9432;">
+                                        <p>Less prompt keywords yield more accurate results</p>
+                                    </div>
+
+                                    <div class="generate_wrapper">
+                                        <button onclick="generatePicture(2)">Generate</button>
+                                    </div>
+                                </div>
+
+                                <div class="photoshoots_container hide">
+                                    <div class="photoshoots_wrapper">
+                                        <div class="photoshoots image_container">
+                                            <img class="hide">
+                                            <div class="button_wrapper hide">
+                                                <div class="button close_button"></div><a
+                                                    class="button download_button"></a>
+                                                <div class="button heart_toggle"></div>
+                                            </div>
+
+                                            <section class="loader">
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="status"></h5>
+
+                                    <a id="generate_back" class="button_alt" style="max-width: 300px;"
+                                        onclick="disableSettings(false)">Go
+                                        back</a>
+                                </div>
+
+                            </div>
+                            <h4 id="credits"><span class="credits">
+                                    <%= credits %>
+                                </span> credits</h4>
+                        </div>
+
+                        <div class="card" id="shoot_3">
+                            <h3>Copycat <span class="subtitle">Beta</span></h3>
+                            <h4 class="preview">Replicate any image composition</h4>
+
+                            <span class="expand" onclick="toggleExpandCard(3)">
+                                <svg class="tile-icon-alt" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path
+                                        d="M18.5,8.51h-7v-7A1.5,1.5,0,0,0,10,0h0A1.5,1.5,0,0,0,8.5,1.5v7h-7a1.5,1.5,0,0,0,0,3h7v7A1.5,1.5,0,0,0,10,20h0a1.5,1.5,0,0,0,1.5-1.5v-7h7a1.5,1.5,0,0,0,0-3Z">
+                                    </path>
+                                </svg>
+                            </span>
+
+                            <div class="card_content hide">
+
+                                <div class="settings">
+
+                                    <div>
+                                        <h4>Image influence intensity</h4>
+                                        <div class="multiselect_wrapper">
+                                            <label for="faint" class="multiselect">
+                                                <input type="radio" name="copy_amount" id="faint" />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/faint.png" alt="Faint" />
+                                                        <h5>Faint</h5>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label for="medium" class="multiselect">
+                                                <input type="radio" name="copy_amount" id="medium" checked />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/medium.png" alt="Medium" />
+                                                        <h5>Medium</h5>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <label for="strong" class="multiselect">
+                                                <input type="radio" name="copy_amount" id="strong" />
+                                                <div class="multiselect_content_wrapper">
+                                                    <span class="check_icon"></span>
+                                                    <div class="multiselect_content">
+                                                        <img src="assets/icons/strong.png" alt="Strong" />
+                                                        <h5>Strong</h>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4>Pick image</h4>
+                                        <div id="pick_image">
+                                            <div id="copycat_select">
+                                                <a class="button_alt" onclick="browseTemplate(true)">Browse
+                                                    templates</a>
+                                                <div class="separator">
+                                                    <hr>
+                                                    <p>or</p>
+                                                    <hr>
+                                                </div>
+                                                <div id="drop">
+                                                    <form>
+                                                        <input type="file" id="img_input"
+                                                            accept="image/png, image/jpeg, image/gif"
+                                                            onchange="addPreview(this.files[0])">
+                                                        <label for="img_input">
+                                                            <h5><span id="select_images">Choose image</span> or drag &
+                                                                drop here</h5>
+                                                        </label>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div id="copycat_preview">
+                                                <img />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="generate_wrapper">
+                                        <button onclick="generatePicture(3)" disabled>Generate</button>
+                                    </div>
+                                </div>
+
+                                <div class="photoshoots_container hide">
+                                    <div class="photoshoots_wrapper">
+                                        <div class="photoshoots image_container">
+                                            <img class="hide">
+                                            <div class="button_wrapper hide">
+                                                <div class="button close_button"></div><a
+                                                    class="button download_button"></a>
+                                                <div class="button heart_toggle"></div>
+                                            </div>
+
+                                            <section class="loader">
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                                <div class="dot"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <h5 class="status"></h5>
+
+                                    <a id="generate_back" class="button_alt" style="max-width: 300px;"
+                                        onclick="disableSettings(false)">Go
+                                        back</a>
+                                </div>
+
+
+                                <div class="submenu hide">
+                                    <h4>Copycat templates</h4>
+
+                                    <div class="submenu_gallery_wrapper">
+                                        <div class="submenu_gallery" id="copycat_gallery">
+
+                                        </div>
+                                    </div>
+
+                                    <a class="button_alt" style="max-width: 300px;" onclick="browseTemplate(false)">Go
+                                        back</a>
+                                </div>
+
+                            </div>
+                            <h4 id="credits"><span class="credits">
+                                    <%= credits %>
+                                </span> credits</h4>
+                        </div>
+
+                        <div class="card" id="shoot_4" style="opacity: 0.5;">
+                            <h3>Pose+ <span class="subtitle">Coming soon</span></h3>
+                            <h4 class="preview">Customize your posture with our pose builder</h4>
+                        </div>
+
+                        <div class="card" id="shoot_5" style="opacity: 0.5;">
+                            <h3>Prebuilt <span class="subtitle">Coming soon</span></h3>
+                            <h4 class="preview">Get high quality results with tested templates</h4>
+                        </div>
+
+                        <div class="card" id="shoot_6" style="opacity: 0.5;">
+                            <h3>Retouch <span class="subtitle">Next year</span></h3>
+                            <h4 class="preview">Fix any AI artifact from your generated images</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section" id="section_2">
+                    <div class="content">
+                        <div id="filter" class="card">
+                            <h4>Photoshoots</h4>
+                            <h1 id="photoshoots_number"></h1>
+                            <br>
+                            <br>
+                            <button id="toggle_liked" onclick="filterLiked()">Show liked</button>
+                        </div>
+
+                        <div id="gallery">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section" id="section_3">
+                    <div class="content">
+                        <div id="details">
+                            <h2>Top Up</h2>
+                            <ul>
+                                <li><%- topUpPictureAmount %> more credits</li>
+                                <li>Generate high quality photos</li>
+                                <li>Fully customizable photos <span class="subbullet">Pick location, outfit
+                                        & more</span></li>
+                            </ul>
+                            <h3>$<%- topUpPrice %></h3>
+                        </div>
+
+                        <hr>
+
+                        <div class="card" id="topup_payment">
+                            <div id="payment">
+                                <div id="payment_inputs">
+
+                                </div>
+
+                                <p class="error">&nbsp;</p>
+                            </div>
+
+                            <button id="pay" onclick="buyTopUp()">Pay </button>
+
+                            <div id="payment_info">
+                                <img src="assets/icons/i.png" alt="&#9432;">
+                                <p>
+                                    By proceeding with the payment, you agree to the <a class="skip_fade"
+                                        href="./terms-and-conditions" target="_blank">terms &
+                                        conditions</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                window.addEventListener("load", function () {
+                    initialize();
+                    loadHistory();
+                    updateCredits();
+                    setTimeout(updateCredits, 3000);
+                });
+            </script>
+
+            <% } else{ %>
+                <div id="model_building">
+                    <span id="model_loader"></span>
+                    <h2>Your model is training...</h2>
+                    <h4>We'll send you an email once its ready!</h4>
+                </div>
+
+                <script>
+                    setInterval(() => {
+                        fetch("./model-completed", {
+                            method: "GET",
+                            headers: { "Content-Type": "application/json" },
+                        }).then((response, reject) => {
+                            if (response.ok) return response.json();
+                        }).then((res) => {
+                            if (res.ready) {
+                                location.reload();
+                            }
+                        })
+                    }, 10000)
+                </script>
+                <% } %>
+    </main>
+
+</body>
+
+</html>

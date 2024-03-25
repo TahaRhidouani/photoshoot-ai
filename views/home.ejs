@@ -1,0 +1,323 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot AI - Home</title>
+    <meta name="description"
+        content="Elevate your pics, skip the shoot. With the power of AI, generate professional grade pictures from the confort of your couch.">
+
+    <meta name="theme-color" content="black">
+    <link rel="icon" href="assets/logo/icon.png">
+
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js" defer></script>
+    <script src="home.js" defer></script>
+    <script src="transition.js" defer></script>
+    <script type="module" src="gradient-import.js" defer></script>
+</head>
+
+<body data-scroll-container>
+    <div id="transition"></div>
+
+    <nav>
+        <img src="assets/logo/logo (white).png" alt="Photoshoot AI" id="logo">
+
+        <div id="menu">
+            <a id="overview">How it works</a>
+            <a id="pricing">Pricing</a>
+            <a id="faq">FAQ</a>
+        </div>
+
+        <div id="signin">
+            <a href="./signin" id="signin">Sign In</a>
+            <a href="./setup" id="get_photos">Get Your Photos</a>
+        </div>
+    </nav>
+
+    <main data-scroll-section>
+        <div id="section_1">
+            <div id="graphics_1">
+                <img id="portrait_1" src="assets/images/portrait (1).png" data-scroll data-scroll-speed="2">
+                <div id="secondary_1">
+                    <img id="arrow_1" src="assets/icons/arrow.png" data-scroll data-scroll-speed="2.5">
+                    <img id="base_1" src="assets/images/base (1).png" data-scroll data-scroll-speed="2.5">
+                </div>
+            </div>
+
+            <div id="text_1">
+                <h1 data-scroll data-scroll-direction="horizontal" data-scroll-speed="8" data-scroll-position="left">
+                    ELEVATE YOUR PICS</h1>
+                <h1 style="text-align: end; bottom: 0;" data-scroll data-scroll-direction="horizontal"
+                    data-scroll-speed="-8" data-scroll-position="left">SKIP THE SHOOT
+                </h1>
+            </div>
+
+        </div>
+
+        <canvas id="gradient" data-scroll data-transition-in></canvas>
+
+        <div id="section_2">
+            <div class="carousel">
+                <div>
+                    <ul>
+                        <li><img src="assets/images/portrait (3).png" /></li>
+                        <li><img src="assets/images/portrait (2).png" /></li>
+                        <li><img src="assets/images/portrait (5).png" /></li>
+                        <li><img src="assets/images/portrait (4).png" /></li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li><img src="assets/images/portrait (3).png" /></li>
+                        <li><img src="assets/images/portrait (2).png" /></li>
+                        <li><img src="assets/images/portrait (5).png" /></li>
+                        <li><img src="assets/images/portrait (4).png" /></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="text_2" data-scroll data-scroll-call="fadein-text_2" data-scroll-speed="0.8" class="hidden">
+                <h3>Yes... these were all <span class="highlight glow">AI&#8209;generated</span></h3>
+                <img id="arrow_2" src="assets/icons/arrow.png">
+            </div>
+        </div>
+
+        <div id="section_3">
+            <h1>How it works</h1>
+
+            <div id="secondary_3" data-scroll data-scroll-call="fadein-works">
+                <div class="card hidden">
+                    <img src="assets/images/upload_images.png">
+                    <h4 class="number">1</h4>
+                    <h5>Upload 10-20 pictures of yourself in various locations and outfits (the more variety, the
+                        better).</h5>
+                    <hr>
+                </div>
+
+                <div class="card hidden">
+                    <img src="assets/images/building_model.png">
+                    <h4 class="number">2</h4>
+                    <h5>Let our server train a custom AI model using your pictures.</h5>
+                    <hr>
+                </div>
+
+                <div class="card hidden">
+                    <img src="assets/images/generate_images.png">
+                    <h4 class="number">3</h4>
+                    <h5>Instantly generate pictures of yourself with near-infinite poses, backgrounds and outfits.</h5>
+                </div>
+            </div>
+        </div>
+
+        <div id="section_4">
+            <h1>Pricing</h1>
+            <div id="secondary_4" data-scroll data-scroll-call="fadein-pricing">
+                <div class="card hidden" id="main">
+                    <h2>Photoshoot</h2>
+                    <div id="bullets">
+                        <h4>&check; Custom AI model</h4>
+                        <h4>&check; 30 mins turnaround</h4>
+                        <h4>&check; <%- mainPictureAmount %> credits</h4>
+                        <h4>&check; Generate high quality photos</h4>
+                        <h4>&check; Fully customizable photos <span class="subbullet">Pick location, outfit
+                                & more</span></h4>
+                    </div>
+                    <div id="buy">
+
+                        <% if (locals.mainPriceCompare) { %>
+                            <h3>$<%- mainPrice %> <s
+                                        style="filter: opacity(0.6); font-size: 0.7em; vertical-align: text-top;">&nbsp;$<%-
+                                            mainPriceCompare %>&nbsp;</s></h3>
+                            <% } else { %>
+                                <h3>$<%- mainPrice %></h3>
+                                <% } %>
+
+                                    <div class="vl"></div>
+                                    <a href="./setup">Get started</a>
+                    </div>
+                </div>
+
+                <div class="card hidden" id="topup">
+                    <h2>Top Up</h2>
+                    <div id="bullets">
+                        <h5>&check; <%- topUpPictureAmount %> more credits</h5>
+                        <h5>&check; Generate high quality photos</h5>
+                        <h5>&check; Fully customizable photos <span class="subbullet">Pick location, outfit
+                                & more</span></h5>
+                    </div>
+                    <h3>$<%- topUpPrice %></h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="section_5">
+            <h1>FAQ</h1>
+            <div id="secondary_5" data-scroll data-scroll-call="fadein-faq">
+                <div id="faq_image">
+                    <img src="assets/images/portrait (6).png">
+                </div>
+
+                <div id="faq">
+
+                    <details class="hidden">
+                        <summary>Does Photoshoot AI sell my data?</summary>
+                        <p>
+                            We take your privacy very seriously and <u>do not sell</u> any of your pictures and/or any
+                            other
+                            data and information you give to us.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>What do you do with my photos after training?</summary>
+                        <p>
+                            Your photos are only used to train your AI model, then deleted
+                            <u>immediately</u> after.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>Where is my data stored?</summary>
+                        <p>
+                            All data is securily stored in servers in the United States and subject to U.S. data privacy
+                            laws. All sensitive data is
+                            encrypted.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>Is payment secure?</summary>
+                        <p>
+                            We use Stripe for payment, which ensures bank-level security standards. We do not
+                            store nor do we see any of your payment information.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>How can I delete all my data?</summary>
+                        <p>
+                            Contact support through <a href="mailto:support@photoshootai.app"
+                                style="display: inline;">support@photoshootai.app</a> to delete all your
+                            generated pictures and account data. Please note your uploaded images are automatically
+                            deleted after training your model.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>Who owns the pictures?</summary>
+                        <p>
+                            You do. We grant you full commercial license and ownership over your generated photos.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>How long will it take to train my AI model?</summary>
+                        <p>
+                            Based on current processing times, it takes around 30 minutes to train your AI model.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>How long will it take to generate a photo?</summary>
+                        <p>
+                            Based on current processing times, it takes around 15 seconds for 'quick & easy' and
+                            'customize' modes, and between 30-45 seconds for 'copycat' mode. If your model hasn't been
+                            used in a while, it may be turned off. This will lead to a delay the next time you
+                            generate photos, as the model will need to be rebooted, which can take around 2-3 minutes.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>Can I get a refund?</summary>
+                        <p>
+                            Unfortunately, we cannot offer refunds once the AI model training process has started. The
+                            costs incurred for training your models and generating photos are very high.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>Can I upload photos of kids or minors?</summary>
+                        <p>
+                            No, it is strictly prohibited to upload photos of kids or minors. Our service is designed
+                            for legal adults (18+) only.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>How much will the photos look like me?</summary>
+                        <p>
+                            The resemblance of the photos to you depends on the quality and variety of the photos you
+                            upload. The more varied your photos, the more accurately the AI can understand
+                            and represent your unique characteristics.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>Will the photos have AI artefacts?</summary>
+                        <p>
+                            Sometimes yes. Depending on the quality of the training photos, and the type of photos you
+                            take, you might see some AI artefacts. Any app that uses generative AI imaging will have
+                            artefacts.
+                        </p>
+                    </details>
+
+                    <details class="hidden">
+                        <summary>What type of photos should I upload for training?</summary>
+                        <p>
+                            It's best to have a variety of photos that are different from each other, including facial
+                            expressions, locations, backgrounds, and perspectives. High-quality photos work best.
+                        </p>
+                    </details>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer data-scroll-section>
+        <div>
+            <img id="logo" src="assets/logo/icon.png">
+        </div>
+        <div id="info">
+            <div id="links">
+                <div>
+                    <h4><span class="highlight">Links</span></h4>
+                    <a id="overview">Overview</a>
+                    <a id="pricing">Pricing</a>
+                    <a id="faq">FAQ</a>
+                </div>
+
+                <div>
+                    <h4><span class="highlight">Legal</span></h4>
+                    <a href="./terms-and-conditions">Terms & Conditions</a>
+                    <a href="./privacy-policy">Privacy Policy</a>
+                    <a href="./data-deletion">Data Deletion</a>
+                </div>
+
+                <div>
+                    <h4><span class="highlight">Contact</span></h4>
+                    <a class="skip_fade" href="https://www.facebook.com/photoshootaiapp">Facebook</a>
+                    <a class="skip_fade" href="https://www.instagram.com/photoshootaiapp">Instagram</a>
+                    <a class="skip_fade" href="mailto:support@photoshootai.app">Email</a>
+                </div>
+            </div>
+
+            <hr />
+            <h5>Copyright © 2024 Photoshoot AI. All rights reserved.</h5>
+            <div id="payment_icons">
+                <img src="assets/icons/payment/applepay.png" alt="Apple Pay">
+                <img src="assets/icons/payment/visa.png" alt="Visa">
+                <img src="assets/icons/payment/mastercard.png" alt="Mastercard">
+                <img src="assets/icons/payment/amex.png" alt="American Express">
+                <img src="assets/icons/payment/discover.png" alt="Discover">
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot AI - <%= title %>
+    </title>
+    <meta name="description"
+        content="Elevate your pics, skip the shoot. With the power of AI, generate professional grade pictures from the confort of your couch.">
+
+    <meta name="theme-color" content="black">
+    <link rel="icon" href="assets/logo/icon.png">
+
+    <link rel="stylesheet" href="text.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js" defer></script>
+    <script src="text.js" defer></script>
+    <script src="transition.js" defer></script>
+    <script type="module" src="gradient-import.js" defer></script>
+</head>
+
+<body data-scroll-container>
+    <div id="transition"></div>
+
+    <main data-scroll-section>
+        <img id="logo" src="assets/logo/logo (dark).png" alt="Photoshoot AI">
+
+        <div id="text">
+            <h1>
+                <%= title %>
+            </h1>
+            <hr>
+
+            <div>
+                <%- text %>
+            </div>
+        </div>
+    </main>
+
+    <canvas id="gradient" data-transition-in></canvas>
+
+</body>
+
+</html>

@@ -1,0 +1,233 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot AI - Setup
+    </title>
+    <meta name="description"
+        content="Elevate your pics, skip the shoot. With the power of AI, generate professional grade pictures from the confort of your couch.">
+
+    <meta name="theme-color" content="black">
+    <link rel="icon" href="assets/logo/icon.png">
+
+    <link rel="stylesheet" href="setup.css">
+    <script src="setup.js" defer></script>
+    <script src="transition.js" defer></script>
+    <script type="module" src="gradient-import.js" defer></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1361276824737553');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1361276824737553&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
+</head>
+
+<body>
+    <div id="transition"></div>
+
+    <main>
+        <div id="content">
+            <div id="form">
+                <div id="nav">
+                    <div id="links">
+                        <a class="skip_fade" href="mailto:support@photoshootai.app">Need help?</a>
+                        <a href="./signin">Sign In</a>
+                    </div>
+                    <div id="progress">
+                        <hr class="complete">
+                        <hr>
+                        <hr>
+                    </div>
+                </div>
+
+                <div id="section_container">
+                    <div id="section_1" class="sections visible">
+                        <h3>Welcome! First things first...</h3>
+                        <h1>Upload your photos</h1>
+
+                        <div id="drop">
+                            <form>
+                                <input type="file" id="img_input" multiple accept="image/png, image/jpeg, image/gif"
+                                    onchange="handleFiles(this.files)">
+                                <label for="img_input">
+                                    <h3><span id="select_images">Choose images</span> or drag &
+                                        drop here</h3>
+                                </label>
+                                <p id="photo_type">What type of photos should I upload?</p>
+
+                                <div>
+                                    <div id="preview"></div>
+
+                                    <div id="scrollbar">
+                                        <div id="scrollbar-thumb" class="hidden"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h3 style="margin: 20px 0px 10px 0px">Select gender</h3>
+                            <div class="multiselect_wrapper">
+                                <label for="male" class="multiselect">
+                                    <input type="radio" name="gender" id="male" onchange="updateError1()" />
+                                    <div class="multiselect_content_wrapper">
+                                        <span class="check_icon"></span>
+                                        <div class="multiselect_content">
+                                            <img src="assets/icons/male.png" alt="Male" />
+                                            <h5>Male</h5>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label for="female" class="multiselect">
+                                    <input type="radio" name="gender" id="female" onchange="updateError1()" />
+                                    <div class="multiselect_content_wrapper">
+                                        <span class="check_icon"></span>
+                                        <div class="multiselect_content">
+                                            <img src="assets/icons/female.png" alt="Female" />
+                                            <h5>Female</h5>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label for="other" class="multiselect">
+                                    <input type="radio" name="gender" id="other" onchange="updateError1()" />
+                                    <div class="multiselect_content_wrapper">
+                                        <span class="check_icon"></span>
+                                        <div class="multiselect_content">
+                                            <img src="assets/icons/other-gender.png" alt="Other" />
+                                            <h5>Other</h>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <p id="error">&nbsp;</p>
+                    </div>
+
+
+                    <div id="section_1_alt" class="sections">
+                        <h1>Tips for your photos</h1>
+
+                        <div id="do">
+                            <ul>
+                                <li>Upload 20-30 different pictures</li>
+                                <li>Variety is key: perspective, outfits and backgrounds should
+                                    all be different</li>
+                                <li>Crop out other people from your photos</li>
+                                <li>High quality photos work best</li>
+                            </ul>
+                        </div>
+
+                        <div id="dont">
+                            <ul>
+                                <li>Photos with other people in it</li>
+                                <li>Old pictures of you</li>
+                                <li>All photos are selfies</li>
+                                <li>Low quality or blurry photos</li>
+                            </ul>
+                        </div>
+
+                        <p>Example:</p>
+                        <div id="examples">
+                            <img src="assets/images/example.png">
+                        </div>
+                        <br>
+                        <p id="photo_type_back" style="text-align: center;">Go back</p>
+                    </div>
+
+                    <div id="section_2" class="sections">
+                        <h3>Looking great! Let's save your progress...</h3>
+                        <h1>Register</h1>
+
+                        <form>
+                            <a onclick="signIn('google')" class="social_signin" id="google">
+                                <img src="assets/icons/google.png" alt="Google">
+                                <p>Continue with Google</p>
+                            </a>
+
+                            <a onclick="signIn('microsoft')" class="social_signin" id="microsoft">
+                                <img src="assets/icons/microsoft.png" alt="Microsoft">
+                                <p>Continue with Microsoft</p>
+                            </a>
+
+                            <a onclick="signIn('facebook')" class="social_signin" id="facebook">
+                                <img src="assets/icons/facebook.png" alt="Facebook">
+                                <p>Continue with Facebook</p>
+                            </a>
+
+                            <div id="separator">
+                                <hr>
+                                <p>or</p>
+                                <hr>
+                            </div>
+
+                            <input id="email" type="email" placeholder="Email" autocomplete="email"
+                                onblur="validateEmail(this.value.trim())">
+
+                            <div id="password_container">
+                                <input id="password" type="password" placeholder="Password" autocomplete="new-password"
+                                    onblur="validatePassword(this.value)">
+                                <img id="password_view" class="hidden" src="assets/icons/eye.png">
+                            </div>
+
+                            <p id="error">&nbsp;</p>
+                        </form>
+                    </div>
+
+                    <div id="section_3" class="sections">
+                        <h3>Last step!</h3>
+                        <h1>Payment</h1>
+
+                        <div id="payment_inputs">
+
+                        </div>
+
+                        <p id="error">&nbsp;</p>
+
+                        <div id="payment_info">
+                            <img src="assets/icons/i.png" alt="&#9432;">
+                            <p>
+                                By proceeding with the payment, you agree to the <a class="skip_fade"
+                                    href="./terms-and-conditions" target="_blank">terms & conditions</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="loader hidden">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </section>
+
+                <div id="navigation">
+                    <p class="hidden">Previous</p>
+                    <button disabled style="width: 150px;">Next</button>
+                </div>
+            </div>
+        </div>
+        <canvas id="gradient" data-transition-in></canvas>
+    </main>
+
+</body>
+
+</html>

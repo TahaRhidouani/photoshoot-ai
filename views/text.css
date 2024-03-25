@@ -1,0 +1,137 @@
+@font-face {
+  font-family: Circular;
+  src: url("./assets/fonts/CircularStd.ttf") format("truetype"), url("./assets/fonts/CircularStd.woff") format("woff");
+}
+
+@font-face {
+  font-family: CircularLight;
+  src: url("./assets/fonts/CircularStd-Light.ttf") format("truetype"), url("./assets/fonts/CircularStd-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: Artegra;
+  src: url("./assets/fonts/Artegra.ttf") format("truetype"), url("./assets/fonts/Artegra.woff") format("woff");
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  background-color: #000000;
+  width: 100%;
+}
+
+a {
+  font-family: "Circular";
+  color: black;
+  cursor: pointer;
+  user-select: none;
+}
+
+h1 {
+  color: black;
+  font-family: "Circular";
+  font-size: 3em;
+  margin: 20px 0;
+}
+
+h2 {
+  color: black;
+  font-family: "Circular";
+  font-size: 1.5em;
+  margin: 20px 0;
+}
+
+p {
+  color: black;
+  font-family: "CircularLight";
+  font-size: 1em;
+  margin: 20px 0;
+}
+
+ul {
+  list-style-position: inside;
+  font-family: "CircularLight";
+}
+
+main {
+  position: relative;
+  z-index: 999;
+  height: fit-content;
+  width: 90%;
+  max-width: 1000px;
+  margin: 5vmin auto;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0px 40px rgba(0, 0, 0, 0.3);
+}
+
+main > #logo {
+  height: 15vmin;
+  max-height: 150px;
+  margin-top: 5vmin;
+}
+
+main > #text {
+  width: 100%;
+  margin-top: 5vmin;
+  padding-inline: 5vmin;
+}
+
+main > #text > hr {
+  border: black solid 1px;
+}
+
+span.highlight {
+  color: #d27eff !important;
+}
+
+span.glow {
+  text-shadow: 0 0px 30px rgb(210 126 255 / 75%);
+}
+
+#transition {
+  background-color: black;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9999999999;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+#transition.hide {
+  opacity: 0;
+}
+
+.c-scrollbar_thumb {
+  background-color: white !important;
+}
+
+.c-scrollbar {
+  z-index: 9999999999;
+}
+
+#gradient {
+  top: 0;
+  left: 0;
+  filter: opacity(0.6);
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  --gradient-color-1: #f2c2ff;
+  --gradient-color-2: #b650ed;
+  --gradient-color-3: #a127ce;
+  --gradient-color-4: #64158e;
+}

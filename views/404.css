@@ -1,0 +1,91 @@
+@font-face {
+  font-family: Circular;
+  src: url("./assets/fonts/CircularStd.ttf") format("truetype"), url("./assets/fonts/CircularStd.woff") format("woff");
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  background-color: #000000;
+  width: 100%;
+}
+
+a {
+  font-family: "Circular";
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  margin-top: 100px;
+  opacity: 0.5;
+}
+
+h1 {
+  color: white;
+  font-family: "Circular";
+  font-size: 8em;
+  margin-block: 30px 10px;
+  text-align: center;
+  opacity: 0.5;
+}
+
+h2 {
+  color: white;
+  font-family: "Circular";
+  font-size: 2em;
+  text-align: center;
+  opacity: 0.5;
+}
+
+main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 999;
+}
+
+#transition {
+  background-color: black;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9999999999;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+#transition.hide {
+  opacity: 0;
+}
+
+#gradient {
+  top: 0;
+  left: 0;
+  opacity: 0.4;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  --gradient-color-1: #f2c2ff;
+  --gradient-color-2: #b650ed;
+  --gradient-color-3: #a127ce;
+  --gradient-color-4: #64158e;
+}
+
+#logo {
+  height: 200px;
+  margin-left: 25px;
+}
