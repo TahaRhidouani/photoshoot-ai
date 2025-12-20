@@ -33,7 +33,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-microsoft": "^1.0.0",
-    "replicate": "^0.12.3",
+    "replicate": "^1.4.0",
     "sharp": "^0.31.3",
     "stripe": "^12.7.0"
   }

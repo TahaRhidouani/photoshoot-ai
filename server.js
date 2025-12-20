@@ -393,7 +393,6 @@ app.post("/pictures", async (req, res) => {
 
       settings.prompt = settings.prompt.replace("OPTIONS", options.join(", "));
       settings.prompt = settings.prompt.replace("INSTANCE", "cjw " + usr.gender);
-      settings.face_enhance_prompt = settings.face_enhance_prompt.replace("INSTANCE", "cjw " + usr.gender);
     } else if (req.body.source == "customize") {
       if (!req.body["aspect-ratio"]) return res.status(401).send();
 
@@ -406,8 +405,6 @@ app.post("/pictures", async (req, res) => {
 
       settings.prompt = settings.prompt.replace("OPTIONS", "(" + req.body["prompt"] + ")");
       settings.prompt = settings.prompt.replace("INSTANCE", "cjw " + usr.gender);
-      settings.face_enhance_prompt = settings.face_enhance_prompt.replace("INSTANCE", "cjw " + usr.gender);
-      settings.negative_prompt = settings.negative_prompt.replace("OPTIONS", req.body["negative-prompt"]);
     } else if (req.body.source == "copycat") {
       if (!req.body["image"] || !req.body["strength"] || req.body["isCustomImage"] === null) return res.status(401).send();
 
@@ -436,7 +433,6 @@ app.post("/pictures", async (req, res) => {
 
       Object.assign(settings, generationOptions["copycat"]["base"]);
       settings.prompt = settings.prompt.replace("INSTANCE", "cjw " + usr.gender);
-      settings.face_enhance_prompt = settings.face_enhance_prompt.replace("INSTANCE", "cjw " + usr.gender);
     }
 
     let response = await utils.generateImage(req.user._id, req.user.model, settings);
@@ -652,20 +648,18 @@ app.all("/model-completed/:id", async (req, res) => {
 
       if (usr.model) return res.status(200).send();
 
-      usr.model = req.body.version;
+      usr.model = req.body.output.version;
       usr.save();
 
       settings = {};
       Object.assign(settings, generationOptions["profile_picture"]["base"]);
       settings.prompt = settings.prompt.replace("INSTANCE", "cjw " + usr.gender);
-      settings.face_enhance_prompt = settings.face_enhance_prompt.replace("INSTANCE", "cjw " + usr.gender);
-      await utils.generateImage(req.params.id, req.body.version, settings);
+      await utils.generateImage(req.params.id, usr.model, settings);
 
       settings = {};
       Object.assign(settings, generationOptions["email"]["base"]);
       settings.prompt = settings.prompt.replace("INSTANCE", "cjw " + usr.gender);
-      settings.face_enhance_prompt = settings.face_enhance_prompt.replace("INSTANCE", "cjw " + usr.gender);
-      await utils.generateImage(req.params.id, req.body.version, settings);
+      await utils.generateImage(req.params.id, usr.model, settings);
 
       fs.unlinkSync(path.join(__dirname, "uploads/" + req.params.id + ".zip"));
     } else if (req.body.status == "failed") {
@@ -761,15 +755,17 @@ app.post("/payment-completed", express.raw({ type: "application/json" }), async 
 
           await utils.processImages(usrImgs, usr._id);
           await deleteUserImages(usr._id);
-          await utils.generateModel(usr._id, usr.gender, usrImgs.length);
+          await utils.generateModel(usr._id);
         } catch (err) {
           utils.sendError(err);
         }
       }
     } else if (event.data.object.amount === legal["topup-price"] * 100) {
-      await user.userModel.findOneAndUpdate({ topupPaymentID: event.data.object.id }, { $inc: { credits: legal["topup-picture-amount"] } }).catch((err) => {
-        utils.sendError(err);
-      });
+      await user.userModel
+        .findOneAndUpdate({ topupPaymentID: event.data.object.id }, { $inc: { credits: legal["topup-picture-amount"] } })
+        .catch((err) => {
+          utils.sendError(err);
+        });
     }
   }
 });

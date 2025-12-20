@@ -19,7 +19,13 @@ async function processImages(images, id) {
       const addHeight = (side - height) / 2;
 
       const result = await img
-        .extend({ top: Math.ceil(addHeight), bottom: Math.floor(addHeight), left: Math.ceil(addWidth), right: Math.floor(addWidth), background: "#000000" })
+        .extend({
+          top: Math.ceil(addHeight),
+          bottom: Math.floor(addHeight),
+          left: Math.ceil(addWidth),
+          right: Math.floor(addWidth),
+          background: "#000000",
+        })
         .withMetadata()
         .toBuffer();
       const filename = image.filename;
@@ -37,46 +43,23 @@ async function processImages(images, id) {
   });
 }
 
-async function generateModel(id, gender, imgNum) {
-  let classData = {};
+async function generateModel(id) {
+  const response = await replicate.trainings.create(
+    "replicate",
+    "fast-flux-trainer",
+    "8b10794665aed907bb98a1a5324cd1d3a8bea0e9b31e65210967fb9c9e2e08ed",
+    {
+      destination: "taharhidouani/dreambooth-models",
+      input: {
+        input_images: process.env.URL + "/user-pictures/" + id,
+        trigger_word: "cjw",
+        lora_type: "subject",
+      },
+      webhook: process.env.URL + "/model-completed/" + id,
+    }
+  );
 
-  if (gender == "man") {
-    classData["data"] = process.env.MODEL_URL + "/regularization-images-man.zip";
-    classData["amount"] = 4820;
-  } else if (gender == "woman") {
-    classData["data"] = process.env.MODEL_URL + "/regularization-images-woman.zip";
-    classData["amount"] = 4420;
-  } else {
-    classData["data"] = process.env.MODEL_URL + "/regularization-images-other.zip";
-    classData["amount"] = 2115;
-  }
-
-  const body = {
-    input: {
-      instance_prompt: "photo of a cjw " + gender,
-      class_prompt: "photo of a " + gender,
-      instance_data: process.env.URL + "/user-pictures/" + id,
-      class_data: classData["data"],
-      max_train_steps: 150 * imgNum,
-      num_class_images: Math.min(classData["amount"], 150 * imgNum),
-      ckpt_base: process.env.MODEL_URL + "/base-model.ckpt",
-    },
-    model: "tahainc/dreambooth-models",
-    trainer_version: "a8ba568da0313951a6b311b43b1ea3bf9f2ef7b9fd97ed94cebd7ffd2da66654",
-    template_version: "e9639aebcd8c92810d487efe5df25078b350583d83228867b35ae4aee6557a2c",
-    webhook_completed: process.env.URL + "/model-completed/" + id,
-  };
-
-  const response = await fetch("https://dreambooth-api-experimental.replicate.com/v1/trainings", {
-    method: "POST",
-    headers: {
-      Authorization: "Token " + process.env.REPLICATE_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
+  if (response.status === "failed") {
     sendError(await response.text());
   }
 }
@@ -85,7 +68,11 @@ async function generateImage(id, model, settings) {
   let ObjectID = mongoose.Types.ObjectId;
   settings.imgId = new ObjectID();
 
-  const response = await replicate.predictions.create({ version: model, input: settings, webhook: process.env.URL + "/picture-completed/" + id });
+  const response = await replicate.predictions.create({
+    version: model,
+    input: settings,
+    webhook: process.env.URL + "/picture-completed/" + id,
+  });
 
   await new Promise((resolve) => setTimeout(resolve, 5000));
 

@@ -1,16 +1,8 @@
 {
   "easy": {
     "base": {
-      "prompt": "(portrait photo of INSTANCE), OPTIONS, RAW photo, bokeh, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3, <lora:epiNoiseoffset_v2:1>",
-      "negative_prompt": "(monochrome, black and white, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck",
-      "face_enhance_prompt": "INSTANCE",
-      "action": "txt2img",
-      "controlnet": false,
-      "steps": 30,
-      "cfg_scale": 5,
-      "upscale": 2,
-      "restore_face": true,
-      "scheduler": "DPM++ SDE Karras"
+      "prompt": "(portrait photo of INSTANCE), OPTIONS, RAW photo, bokeh, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3",
+      "aspect_ratio": "custom"
     },
     "settings": {
       "square": { "width": 512, "height": 512 },
@@ -364,16 +356,8 @@
   },
   "customize": {
     "base": {
-      "prompt": "(portrait photo of INSTANCE), OPTIONS, RAW photo, bokeh, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3, <lora:epiNoiseoffset_v2:1>",
-      "negative_prompt": "OPTIONS, monochrome, black and white, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck",
-      "face_enhance_prompt": "INSTANCE",
-      "action": "txt2img",
-      "controlnet": false,
-      "steps": 30,
-      "cfg_scale": 5,
-      "upscale": 2,
-      "restore_face": true,
-      "scheduler": "DPM++ SDE Karras"
+      "prompt": "(portrait photo of INSTANCE), OPTIONS, RAW photo, bokeh, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3",
+      "aspect_ratio": "custom"
     },
     "settings": {
       "square": { "width": 512, "height": 512 },
@@ -383,18 +367,7 @@
   },
   "copycat": {
     "base": {
-      "prompt": "(portrait photo of INSTANCE), <lora:epiNoiseoffset_v2:1>",
-      "negative_prompt": "(monochrome, black and white, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck",
-      "face_enhance_prompt": "INSTANCE",
-      "action": "img2img",
-      "controlnet": true,
-      "controlnet_model": "t2iadapter_openpose_sd14v1 [4286314e]",
-      "controlnet_weight": 0.5,
-      "steps": 50,
-      "cfg_scale": 5,
-      "upscale": 1,
-      "restore_face": false,
-      "scheduler": "DPM++ SDE Karras"
+      "prompt": "(portrait photo of INSTANCE)"
     },
     "options": {
       "man": [
@@ -627,16 +600,8 @@
   },
   "email": {
     "base": {
-      "prompt": "(portrait photo of INSTANCE), (City), (full body shot), RAW photo, bokeh, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3, <lora:epiNoiseoffset_v2:1>",
-      "negative_prompt": "(monochrome, black and white, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck",
-      "face_enhance_prompt": "INSTANCE",
-      "action": "txt2img",
-      "controlnet": false,
-      "steps": 30,
-      "cfg_scale": 5,
-      "upscale": 1,
-      "restore_face": true,
-      "scheduler": "DPM++ SDE Karras",
+      "prompt": "(portrait photo of INSTANCE), (City), (full body shot), RAW photo, bokeh, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3",
+      "aspect_ratio": "custom",
       "width": 704,
       "height": 512,
       "email": true
@@ -644,16 +609,7 @@
   },
   "profile_picture": {
     "base": {
-      "prompt": "(portrait photo of INSTANCE), (purple backdrop), RAW photo, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3, <lora:epiNoiseoffset_v2:1>",
-      "negative_prompt": "(monochrome, black and white, deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck",
-      "face_enhance_prompt": "INSTANCE",
-      "action": "txt2img",
-      "controlnet": false,
-      "steps": 30,
-      "cfg_scale": 5,
-      "upscale": 1,
-      "restore_face": true,
-      "scheduler": "DPM++ SDE Karras",
+      "prompt": "(portrait photo of INSTANCE), (purple backdrop), RAW photo, high detailed skin, 8k uhd, dslr, soft lighting, high quality, film grain, Fujifilm XT3",
       "width": 512,
       "height": 512,
       "profile_picture": true
