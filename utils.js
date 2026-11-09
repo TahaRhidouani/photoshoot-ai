@@ -1,12 +1,17 @@
 const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
 const archiver = require("archiver");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
 const replicate = new (require("replicate"))({ auth: process.env.REPLICATE_KEY });
 const { Client, GatewayIntentBits } = require("discord.js");
 
+const UPLOADS_DIR = process.env.UPLOADS_DIR || "/data/uploads";
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
 async function processImages(images, id) {
-  const output = fs.createWriteStream("uploads/" + id + ".zip");
+  const output = fs.createWriteStream(path.join(UPLOADS_DIR, id + ".zip"));
   const archive = archiver("zip");
   archive.pipe(output);
 
@@ -51,11 +56,11 @@ async function generateModel(id) {
     {
       destination: "taharhidouani/dreambooth-models",
       input: {
-        input_images: process.env.URL + "/user-pictures/" + id,
+        input_images: callbackUrl("/user-pictures/", id),
         trigger_word: "cjw",
         lora_type: "subject",
       },
-      webhook: process.env.URL + "/model-completed/" + id,
+      webhook: callbackUrl("/model-completed/", id),
     }
   );
 
@@ -71,7 +76,7 @@ async function generateImage(id, model, settings) {
   const response = await replicate.predictions.create({
     version: model,
     input: settings,
-    webhook: process.env.URL + "/picture-completed/" + id,
+    webhook: callbackUrl("/picture-completed/", id),
   });
 
   await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -102,6 +107,14 @@ async function bufferToBase64(imgBuffer) {
   return imgBase64;
 }
 
+function callbackToken(id) {
+  return crypto.createHmac("sha256", process.env.REPLICATE_KEY).update(String(id)).digest("hex");
+}
+
+function callbackUrl(route, id) {
+  return process.env.URL + route + id + "?token=" + callbackToken(id);
+}
+
 function sendError(err) {
   if (process.env.DISCORD_BOT_TOKEN) {
     const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
@@ -116,4 +129,4 @@ function sendError(err) {
   console.error(err);
 }
 
-module.exports = { processImages, generateModel, generateImage, getPredictionStatus, bufferToBase64, sendError };
+module.exports = { UPLOADS_DIR, processImages, generateModel, generateImage, getPredictionStatus, bufferToBase64, callbackToken, sendError };

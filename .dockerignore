@@ -1,0 +1,14 @@
+.git
+.github
+.dockerignore
+Dockerfile
+README.md
+images
+**/node_modules
+**/.env*
+**/.DS_Store
+model-data
+model-generator
+model-predictor
+email-template
+uploads

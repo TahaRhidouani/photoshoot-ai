@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const PORT = process.env.PORT || 1120;
+const PORT = process.env.PORT || 8080;
 
 const { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectsCommand } = require("@aws-sdk/client-s3");
 const express = require("express");
@@ -10,6 +10,7 @@ const formidable = require("formidable");
 const fs = require("fs");
 const app = express();
 const path = require("path");
+const crypto = require("crypto");
 const cron = require("node-cron");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -34,7 +35,11 @@ const mongoStore = new MongoDBStore({
 let gfs;
 let client = new S3Client({ region: process.env.AWS_REGION });
 
+app.set("trust proxy", true);
 app.set("view engine", "ejs");
+
+app.get("/healthz", (req, res) => res.status(200).send("ok"));
+
 app.use((req, res, next) => {
   if (req.originalUrl === "/payment-completed") {
     next();
@@ -47,15 +52,15 @@ app.use(express.urlencoded({ extended: true, limit: "900mb" }));
 app.use(express.static(path.join(__dirname, "views")));
 app.use(
   session({
-    secret: "photoshootai",
+    secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex"),
     resave: true,
     saveUninitialized: true,
     store: mongoStore,
+    cookie: { secure: "auto", sameSite: "lax" },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.enable("trust proxy");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.get("/", (req, res) => {
@@ -413,6 +418,10 @@ app.post("/pictures", async (req, res) => {
         const imgBase64 = req.body["image"].split(";base64,").pop();
         imgBuffer = Buffer.from(imgBase64, "base64");
       } else {
+        // Only fetch images from the copycat gallery
+        const gallery = generationOptions["copycat"]["options"]["man"].concat(generationOptions["copycat"]["options"]["woman"]);
+        if (!gallery.includes(req.body["image"])) return res.status(401).send();
+
         const imgResponse = await fetch(req.body["image"]);
         imgBuffer = Buffer.from(await imgResponse.arrayBuffer());
       }
@@ -443,7 +452,7 @@ app.post("/pictures", async (req, res) => {
   }
 });
 
-app.all("/picture-completed/:id", async (req, res) => {
+app.all("/picture-completed/:id", verifyWebhook, async (req, res) => {
   if (req.body.status == "succeeded") {
     const img = req.body.output;
     const imgId = req.body.input.imgId;
@@ -556,7 +565,7 @@ app.get("/pictures/:user/:id", async (req, res) => {
 
   if (!usr) return res.status(404).send();
 
-  const img = usr.generatedImages.find((img) => img._id.toString() === req.params.id) ?? req.user.profilPicture == req.params.id;
+  const img = usr.generatedImages.find((img) => img._id.toString() === req.params.id) ?? req.user?.profilPicture == req.params.id;
 
   if (img) {
     const command = new GetObjectCommand({
@@ -636,12 +645,12 @@ app.get("/credits", async (req, res) => {
   }
 });
 
-app.get("/user-pictures/:id", (req, res) => {
+app.get("/user-pictures/:id", verifyWebhook, (req, res) => {
   const id = req.params.id.replace(/[^A-Za-z0-9]/g, "");
-  res.download(path.join(__dirname, "uploads/" + id + ".zip"));
+  res.download(path.join(utils.UPLOADS_DIR, id + ".zip"));
 });
 
-app.all("/model-completed/:id", async (req, res) => {
+app.all("/model-completed/:id", verifyWebhook, async (req, res) => {
   try {
     if (req.body.status == "succeeded") {
       const usr = await user.userModel.findOne({ _id: req.params.id });
@@ -661,7 +670,7 @@ app.all("/model-completed/:id", async (req, res) => {
       settings.prompt = settings.prompt.replace("INSTANCE", "cjw " + usr.gender);
       await utils.generateImage(req.params.id, usr.model, settings);
 
-      fs.unlinkSync(path.join(__dirname, "uploads/" + req.params.id + ".zip"));
+      fs.unlinkSync(path.join(utils.UPLOADS_DIR, req.params.id + ".zip"));
     } else if (req.body.status == "failed") {
       utils.sendError(req.body);
     }
@@ -716,7 +725,7 @@ app.post("/create-payment-intent", async (req, res) => {
 app.get("/payment-complete", (req, res) => {
   res.send(
     "<html lang='en'><head><script> !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js'); fbq('init', '1361276824737553', { em: '" +
-      (req?.user?.email ? req?.user?.email : "") +
+      (req?.user?.email ? req?.user?.email.replace(/[^\w.@+-]/g, "") : "") +
       "', fn: '" +
       (req?.user?.gender == "man" ? "m" : req?.user?.gender == "woman" ? "f" : "") +
       "'}); </script> <noscript><img height='1' width='1' style='display:none' src='https://www.facebook.com/tr?id=1361276824737553&ev=PageView&noscript=1' /></noscript></head><body></body><script>fbq('track', 'Purchase'); location.href = '/dashboard'; </script></html>"
@@ -773,6 +782,18 @@ app.post("/payment-completed", express.raw({ type: "application/json" }), async 
 app.get("*", (req, res) => {
   res.status(404).render("404.ejs");
 });
+
+// Replicate callbacks carry a per-user token, see utils.callbackUrl
+function verifyWebhook(req, res, next) {
+  const expected = Buffer.from(utils.callbackToken(req.params.id));
+  const given = Buffer.from(String(req.query.token ?? ""));
+
+  if (given.length === expected.length && crypto.timingSafeEqual(given, expected)) {
+    next();
+  } else {
+    res.status(401).send();
+  }
+}
 
 async function emailExists(email) {
   const usr = await user.userModel.findOne({ email: normalizeEmail(email) }).catch((err) => {
