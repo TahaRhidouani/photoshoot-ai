@@ -86,6 +86,8 @@ app.get("/data-deletion", (req, res) => {
 });
 
 app.post("/forgot-password", async (req, res) => {
+  if (!allStrings(req.body.email)) return res.status(400).send();
+
   const usr = await user.userModel.findOne({ email: normalizeEmail(req.body.email) }).catch((err) => {
     utils.sendError(err);
     return res.status(500).send();
@@ -118,6 +120,8 @@ app.post("/forgot-password", async (req, res) => {
 
 app.get("/reset-password", async (req, res) => {
   const { id, token } = req.query;
+  if (!allStrings(id, token)) return res.status(400).send("Invalid link");
+
   const usr = await user.userModel.findOne({ _id: id }).catch((err) => {
     utils.sendError(err);
   });
@@ -143,6 +147,8 @@ app.get("/reset-password", async (req, res) => {
 
 app.post("/reset-password", async (req, res) => {
   const { id, token, password } = req.body;
+  if (!allStrings(id, token, password)) return res.status(400).send({ error: "Invalid request" });
+
 
   let usr = await user.userModel.findOne({ _id: id }).catch((err) => {
     utils.sendError(err);
@@ -186,13 +192,15 @@ app.get("/signin", async (req, res) => {
   }
 });
 
-app.post("/signin", passport.authenticate("local"), (req, res) => {
+app.post("/signin", (req, res, next) => (allStrings(req.body.email, req.body.password) ? next() : res.status(400).send()), passport.authenticate("local"), (req, res) => {
   res.status(200).send();
 });
 
 app.post("/register", async (req, res) => {
   const emailRegex =
     /([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)*|\[((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|IPv6:((((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){6}|::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){5}|[0-9A-Fa-f]{0,4}::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){4}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):)?(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){3}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,2}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){2}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,3}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,4}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::)((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3})|(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3})|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,5}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3})|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,6}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::)|(?!IPv6:)[0-9A-Za-z-]*[0-9A-Za-z]:[!-Z^-~]+)])/;
+
+  if (!allStrings(req.body.email, req.body.password)) return res.status(400).send();
 
   const email = req.body.email;
   const password = await bcrypt.hash(req.body.password, 10);
@@ -275,6 +283,8 @@ app.get("/logout", (req, res) => {
 });
 
 app.post("/valid-email", async (req, res) => {
+  if (!allStrings(req.body.email)) return res.status(400).send();
+
   if (await emailExists(req.body.email)) {
     res.status(409).send();
   } else {
@@ -624,8 +634,11 @@ app.get("/copycat-gallery", async (req, res) => {
 
 app.post("/like-picture", async (req, res) => {
   if (req.isAuthenticated()) {
+    if (!allStrings(req.body.id) || typeof req.body.liked !== "boolean") return res.status(400).send();
+
     const usr = await user.userModel.findOne({ _id: req.user.id });
     const img = usr.generatedImages.find((img) => img._id.toString() === req.body.id);
+    if (!img) return res.status(404).send();
 
     img.liked = req.body.liked;
 
@@ -793,6 +806,10 @@ function verifyWebhook(req, res, next) {
   } else {
     res.status(401).send();
   }
+}
+
+function allStrings(...values) {
+  return values.every((value) => typeof value === "string");
 }
 
 async function emailExists(email) {
