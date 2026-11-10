@@ -35,5 +35,8 @@
     "replicate": "^1.4.0",
     "sharp": "^0.35.5",
     "stripe": "^12.7.0"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   }
 }
