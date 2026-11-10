@@ -1,11 +1,19 @@
 @font-face {
   font-family: Circular;
-  src: url("./assets/fonts/CircularStd.ttf") format("truetype"), url("./assets/fonts/CircularStd.woff") format("woff");
+  src: url("./assets/fonts/CircularStd.woff2") format("woff2"), url("./assets/fonts/CircularStd.woff") format("woff");
+  font-display: swap;
 }
 
 @font-face {
   font-family: CircularLight;
-  src: url("./assets/fonts/CircularStd-Light.ttf") format("truetype"), url("./assets/fonts/CircularStd-Light.woff") format("woff");
+  src: url("./assets/fonts/CircularStd-Light.woff2") format("woff2"), url("./assets/fonts/CircularStd-Light.woff") format("woff");
+  font-display: swap;
+}
+
+/* Image width/height attributes only reserve the aspect ratio while loading, the rules below set the size */
+:where(img[width][height]) {
+  width: auto;
+  height: auto;
 }
 
 * {
