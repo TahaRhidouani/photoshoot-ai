@@ -79,6 +79,7 @@ jobs:
           trap 'docker logs app' EXIT
           ready() {
             curl -fsS -o /dev/null --max-time 5 http://127.0.0.1:8080/healthz || return 1
+            curl -fsS -o /dev/null --max-time 5 -H 'Content-Type: application/json' -d '{"email":"smoke@example.com"}' http://127.0.0.1:8080/valid-email || return 1
             for page in / /signin /.well-known/apple-developer-merchantid-domain-association; do
               curl -fsS -o /dev/null --max-time 5 "http://127.0.0.1:8080$page" || return 1
             done

@@ -32,6 +32,13 @@ const mongoStore = new MongoDBStore({
   collection: "users-sessions",
 });
 
+// The store has no touch(), which resave: false relies on to keep a used session from expiring
+mongoStore.touch = function (id, session, callback) {
+  const expires = session.cookie && session.cookie.expires ? new Date(session.cookie.expires) : new Date(Date.now() + this.options.expires);
+  if (!this.db) return callback();
+  this.db.collection(this.options.collection).updateOne(this._generateQuery(id), { $set: { [this.options.expiresKey]: expires } }, (error) => callback(error));
+};
+
 let gfs;
 let client = new S3Client({ region: process.env.AWS_REGION });
 
@@ -53,8 +60,8 @@ app.use(express.static(path.join(__dirname, "views")));
 app.use(
   session({
     secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex"),
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: mongoStore,
     cookie: { secure: "auto", sameSite: "lax" },
   })
@@ -183,7 +190,7 @@ app.get("/signin", async (req, res) => {
   if (req.isAuthenticated() && (await doneSetup(req?.user))) {
     res.redirect("./dashboard");
   } else {
-    req.logout((err) => {
+    logOutIfSignedIn(req, (err) => {
       if (err) {
         res.redirect("./");
       }
@@ -296,7 +303,7 @@ app.get("/setup", async (req, res) => {
   if (req.isAuthenticated() && (await doneSetup(req?.user))) {
     res.redirect("./dashboard");
   } else {
-    req.logout((err) => {
+    logOutIfSignedIn(req, (err) => {
       if (err) {
         res.redirect("./");
       }
@@ -805,6 +812,15 @@ function verifyWebhook(req, res, next) {
     next();
   } else {
     res.status(401).send();
+  }
+}
+
+// Logging out saves and regenerates the session, so skip it for visitors who have none
+function logOutIfSignedIn(req, callback) {
+  if (req.isAuthenticated()) {
+    req.logout(callback);
+  } else {
+    callback();
   }
 }
 
